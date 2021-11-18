@@ -4,6 +4,7 @@ using namespace std;
 
 void RellenarMapa();
 void ImprimirPantalla();
+void Inputs();
 
 
 
@@ -13,6 +14,9 @@ void ImprimirPantalla();
 //Enumerador de tipos de carácteres que conforman el mapa
 enum MAP_TILES { EMPTY = ' ', WALL = '#', POINT = '.' };
 
+//Enumerador con los tipos de inputs que puede hacer el usuario
+enum USER_INPUTS { NONE, UP, DOWN, RIGHT, LEFT, QUIT };
+
 //Array multidimensional que delimitará el mapa en consola
 MAP_TILES ConsoleScreen[CONSOLE_HEIGHT][CONSOLE_WIDHT];
 
@@ -21,12 +25,19 @@ int personaje_x = CONSOLE_WIDHT / 2;
 int personaje_y = CONSOLE_HEIGHT / 2;
 //Carácter que representa al jugador
 char personaje = 'O';
+//Booleano de ejecución
+bool run = true;
+//Inicialización de la variable inputs
+USER_INPUTS input = USER_INPUTS::NONE;
 
 int main()
 {
     //Primero generamos el mapa y los puntos
     RellenarMapa();
     ImprimirPantalla();
+    while (run) {
+        Inputs();
+    }
 }
 
 /*Para rellenar el mapa utilizaremos un dobre bucle "for" que nos recorra toda la consola. En este bucle
@@ -59,5 +70,36 @@ void ImprimirPantalla() {
             }
         }
         cout << endl;
+    }
+}
+
+/*Para detectar los inputs del usuario, los obtenemos mediante un "cin" y los ponemos en diferentes casos.
+Mediante el enumerador creado anteriormente, decidiremos hacia donde se mueve en función de la tecla pulsada.*/
+void Inputs() { //Input del jugador
+    char input_raw;
+    cin >> input_raw;
+    switch (input_raw) {
+    case 'W':
+    case 'w':
+        input = USER_INPUTS::UP;
+        break;
+    case 'A':
+    case 'a':
+        input = USER_INPUTS::LEFT;
+        break;
+    case 'S':
+    case 's':
+        input = USER_INPUTS::DOWN;
+        break;
+    case 'D':
+    case 'd':
+        input = USER_INPUTS::RIGHT;
+        break;
+    case 'Q':
+    case 'q':
+        input = USER_INPUTS::QUIT;
+        break;
+    default:
+        input = USER_INPUTS::NONE;
     }
 }
