@@ -1,4 +1,6 @@
 #include <iostream>
+#include <conio.h>
+#include <windows.h>
 using namespace std;
 
 
@@ -16,7 +18,7 @@ void Win();
 #define CONSOLE_WIDHT 20
 
 //Enumerador de tipos de carácteres que conforman el mapa
-enum MAP_TILES { EMPTY = ' ', WALL = '#', POINT = '.' };
+enum MAP_TILES { EMPTY = ' ', WALL = '#', PUNTO = '.' };
 
 //Enumerador con los tipos de inputs que puede hacer el usuario
 enum USER_INPUTS { NONE, UP, DOWN, RIGHT, LEFT, QUIT };
@@ -61,6 +63,7 @@ int main()
         ImprimirPuntos();
         //Función que indica que hemos ganado
         Win();
+        Sleep(200);
     }
 }
 
@@ -101,7 +104,7 @@ void ImprimirPantalla() {
 Mediante el enumerador creado anteriormente, decidiremos hacia donde se mueve en función de la tecla pulsada.*/
 void Inputs() { //Input del jugador
     char input_raw;
-    cin >> input_raw;
+    input_raw = _getch();
     switch (input_raw) {
     case 'W':
     case 'w':
@@ -166,7 +169,7 @@ void Logica() { //Logica del movimiento del jugador
         personaje_y_new = personaje_y;
         personaje_x_new = personaje_x;
     }
-    else if (ConsoleScreen[personaje_y_new][personaje_x_new] == MAP_TILES::POINT) { //Si hay un punto me lo como
+    else if (ConsoleScreen[personaje_y_new][personaje_x_new] == MAP_TILES::PUNTO) { //Si hay un punto me lo como
         ConsoleScreen[personaje_y_new][personaje_x_new] = MAP_TILES::EMPTY;
         map_points--;
         puntos_personaje++;
@@ -182,31 +185,31 @@ void GenerarPuntos() {
     for (int counter = 0; counter < 16; counter++) {
         randomX = rand() % CONSOLE_WIDHT;
         randomY = rand() % CONSOLE_HEIGHT;
-        while (ConsoleScreen[randomY][randomX] == MAP_TILES::POINT) { //Si nos sale 2 veces una misma posición
+        while (ConsoleScreen[randomY][randomX] == MAP_TILES::PUNTO) { //Si nos sale 2 veces una misma posición
             randomX = rand() % CONSOLE_WIDHT;                         //Busca otra que no este ocupada por un punto
             randomY = rand() % CONSOLE_HEIGHT;
         }
         if (randomX == 0) {                                           //Si esta esta en algun muro, crea un punto simetricamente al otro lado.
-            ConsoleScreen[randomY][CONSOLE_WIDHT - 1] = MAP_TILES::POINT;
+            ConsoleScreen[randomY][CONSOLE_WIDHT - 1] = MAP_TILES::PUNTO;
             map_points++;
             counter++;
         }
         else if (randomX == CONSOLE_WIDHT - 1) {
-            ConsoleScreen[randomY][0] = MAP_TILES::POINT;
+            ConsoleScreen[randomY][0] = MAP_TILES::PUNTO;
             map_points++;
             counter++;
         }
         else if (randomY == 0) {
-            ConsoleScreen[CONSOLE_HEIGHT - 1][randomX] = MAP_TILES::POINT;
+            ConsoleScreen[CONSOLE_HEIGHT - 1][randomX] = MAP_TILES::PUNTO;
             map_points++;
             counter++;
         }
         else if (randomY == CONSOLE_HEIGHT - 1) {
-            ConsoleScreen[0][randomX] = MAP_TILES::POINT;
+            ConsoleScreen[0][randomX] = MAP_TILES::PUNTO;
             map_points++;
             counter++;
         }
-        ConsoleScreen[randomY][randomX] = MAP_TILES::POINT;
+        ConsoleScreen[randomY][randomX] = MAP_TILES::PUNTO;
         map_points++;
     }
 }
