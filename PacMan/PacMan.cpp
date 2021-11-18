@@ -7,6 +7,8 @@ void ImprimirPantalla();
 void Inputs();
 void Logica();
 void GenerarPuntos();
+void ImprimirPuntos();
+void Win();
 
 
 
@@ -43,11 +45,22 @@ int main()
     //Primero generamos el mapa y los puntos
     RellenarMapa();
     GenerarPuntos();
+    //Lo imprimimos en la consola
     ImprimirPantalla();
+    //Imprimimos los puntos
+    ImprimirPuntos();
+    //Ejecución
     while (run) {
+        //Movimiento que decide el usuario
         Inputs();
+        //Aplicación de dicho movimiento
         Logica();
+        //Impresión del movimiento realizado
         ImprimirPantalla();
+        //Impresión de puntos
+        ImprimirPuntos();
+        //Función que indica que hemos ganado
+        Win();
     }
 }
 
@@ -195,5 +208,18 @@ void GenerarPuntos() {
         }
         ConsoleScreen[randomY][randomX] = MAP_TILES::POINT;
         map_points++;
+    }
+}
+
+//Función que imprime los puntos
+void ImprimirPuntos() {
+    cout << puntos_personaje << "/" << map_points << "\n";
+}
+//Función que cuando no hay mas puntos disponibles indica que hemos ganado.
+void Win() {
+    if (map_points == 0) {
+        cout << "Has ganado!\n";
+        input = USER_INPUTS::QUIT;
+        run = false;
     }
 }
