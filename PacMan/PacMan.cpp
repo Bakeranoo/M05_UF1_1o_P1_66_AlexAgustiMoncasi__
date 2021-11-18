@@ -5,6 +5,7 @@ using namespace std;
 void RellenarMapa();
 void ImprimirPantalla();
 void Inputs();
+void Logica();
 
 
 
@@ -30,6 +31,11 @@ bool run = true;
 //Inicialización de la variable inputs
 USER_INPUTS input = USER_INPUTS::NONE;
 
+//Puntos activos en el mapa
+int map_points = 0;
+//Puntos recogidos por el personaje
+int puntos_personaje = 0;
+
 int main()
 {
     //Primero generamos el mapa y los puntos
@@ -37,6 +43,8 @@ int main()
     ImprimirPantalla();
     while (run) {
         Inputs();
+        Logica();
+        ImprimirPantalla();
     }
 }
 
@@ -102,4 +110,52 @@ void Inputs() { //Input del jugador
     default:
         input = USER_INPUTS::NONE;
     }
+}
+
+/*En este método vamos a mover a nuestro jugador segun la dirección escogida por el usuario.*/
+void Logica() { //Logica del movimiento del jugador
+    int personaje_y_new = personaje_y;
+    int personaje_x_new = personaje_x;
+    switch (input)
+    {
+    case UP:
+        personaje_y_new--;
+        break;
+    case DOWN:
+        personaje_y_new++;
+        break;
+    case RIGHT:
+        personaje_x_new++;
+        break;
+    case LEFT:
+        personaje_x_new--;
+        break;
+    case QUIT:
+        run = false;
+        break;
+    }
+
+    if (personaje_x_new < 0) {              //Si nos salimos por la izquierda
+        personaje_x_new = CONSOLE_WIDHT - 1;//Aparecemos a la derecha
+    }
+    personaje_x_new %= CONSOLE_WIDHT;       //Con el modulo podemos reestablecer la posicion facilmente
+                                            //ya que si nuestro limite fuera 9 y yo me voy a 10 entonces: 10 % 10 = 0
+
+    if (personaje_y_new < 0) {                 //Lo mismo para y
+        personaje_y_new = CONSOLE_HEIGHT - 1;
+    }
+    personaje_y_new %= CONSOLE_HEIGHT;
+
+    if (ConsoleScreen[personaje_y_new][personaje_x_new] == MAP_TILES::WALL) { //Las paredes no las podemos passar
+        personaje_y_new = personaje_y;
+        personaje_x_new = personaje_x;
+    }
+    else if (ConsoleScreen[personaje_y_new][personaje_x_new] == MAP_TILES::POINT) { //Si hay un punto me lo como
+        ConsoleScreen[personaje_y_new][personaje_x_new] = MAP_TILES::EMPTY;
+        map_points--;
+        puntos_personaje++;
+    }
+    //Nueva posición
+    personaje_y = personaje_y_new;
+    personaje_x = personaje_x_new;
 }
