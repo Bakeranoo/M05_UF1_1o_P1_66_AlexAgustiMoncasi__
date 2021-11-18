@@ -6,6 +6,7 @@ void RellenarMapa();
 void ImprimirPantalla();
 void Inputs();
 void Logica();
+void GenerarPuntos();
 
 
 
@@ -41,6 +42,7 @@ int main()
 {
     //Primero generamos el mapa y los puntos
     RellenarMapa();
+    GenerarPuntos();
     ImprimirPantalla();
     while (run) {
         Inputs();
@@ -159,4 +161,39 @@ void Logica() { //Logica del movimiento del jugador
     //Nueva posición
     personaje_y = personaje_y_new;
     personaje_x = personaje_x_new;
+}
+
+/*Para hacer un poco más variado el juego he decidido generar los puntos aleatoriamente con la función "rand".*/
+void GenerarPuntos() {
+    int randomX = 0, randomY = 0;
+    for (int counter = 0; counter < 16; counter++) {
+        randomX = rand() % CONSOLE_WIDHT;
+        randomY = rand() % CONSOLE_HEIGHT;
+        while (ConsoleScreen[randomY][randomX] == MAP_TILES::POINT) { //Si nos sale 2 veces una misma posición
+            randomX = rand() % CONSOLE_WIDHT;                         //Busca otra que no este ocupada por un punto
+            randomY = rand() % CONSOLE_HEIGHT;
+        }
+        if (randomX == 0) {                                           //Si esta esta en algun muro, crea un punto simetricamente al otro lado.
+            ConsoleScreen[randomY][CONSOLE_WIDHT - 1] = MAP_TILES::POINT;
+            map_points++;
+            counter++;
+        }
+        else if (randomX == CONSOLE_WIDHT - 1) {
+            ConsoleScreen[randomY][0] = MAP_TILES::POINT;
+            map_points++;
+            counter++;
+        }
+        else if (randomY == 0) {
+            ConsoleScreen[CONSOLE_HEIGHT - 1][randomX] = MAP_TILES::POINT;
+            map_points++;
+            counter++;
+        }
+        else if (randomY == CONSOLE_HEIGHT - 1) {
+            ConsoleScreen[0][randomX] = MAP_TILES::POINT;
+            map_points++;
+            counter++;
+        }
+        ConsoleScreen[randomY][randomX] = MAP_TILES::POINT;
+        map_points++;
+    }
 }
