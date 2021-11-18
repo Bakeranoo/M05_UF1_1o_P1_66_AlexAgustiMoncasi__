@@ -36,6 +36,7 @@ int map_points = 0;
 //Puntos recogidos por el personaje
 int puntos_personaje = 0;
 
+
 int main()
 {
     //Primero generamos el mapa y los puntos
