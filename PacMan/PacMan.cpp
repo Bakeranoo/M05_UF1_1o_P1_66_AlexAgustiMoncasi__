@@ -1,6 +1,7 @@
 #include <iostream>
 #include <conio.h>
 #include <windows.h>
+#include <iomanip>
 using namespace std;
 
 
@@ -13,9 +14,11 @@ void ImprimirPuntos();
 void Win();
 
 
+#define CONSOLE_HEIGHT 10
+#define CONSOLE_WIDHT 10
 
-#define CONSOLE_HEIGHT 20
-#define CONSOLE_WIDHT 20
+
+
 
 //Enumerador de tipos de carácteres que conforman el mapa
 enum MAP_TILES { EMPTY = ' ', WALL = '#', PUNTO = '.' };
@@ -44,26 +47,31 @@ int puntos_personaje = 0;
 
 int main()
 {
-    //Primero generamos el mapa y los puntos
-    RellenarMapa();
-    GenerarPuntos();
-    //Lo imprimimos en la consola
-    ImprimirPantalla();
-    //Imprimimos los puntos
-    ImprimirPuntos();
-    //Ejecución
-    while (run) {
-        //Movimiento que decide el usuario
-        Inputs();
-        //Aplicación de dicho movimiento
-        Logica();
-        //Impresión del movimiento realizado
+    if (CONSOLE_HEIGHT >= 10 || CONSOLE_WIDHT >= 10) { //Comprovamos que el mapa es de un mínimo de 10 x 10
+        //Primero generamos el mapa y los puntos
+        RellenarMapa();
+        GenerarPuntos();
+        //Lo imprimimos en la consola
         ImprimirPantalla();
-        //Impresión de puntos
+        //Imprimimos los puntos
         ImprimirPuntos();
-        //Función que indica que hemos ganado
-        Win();
-        Sleep(200);
+        //Ejecución
+        while (run) {
+            //Movimiento que decide el usuario
+            Inputs();
+            //Aplicación de dicho movimiento
+            Logica();
+            //Impresión del movimiento realizado
+            ImprimirPantalla();
+            //Impresión de puntos
+            ImprimirPuntos();
+            //Función que indica que hemos ganado
+            Win();
+            Sleep(200);
+        }
+    }
+    else {
+        cout << "Mapa demasiado pequeño.";
     }
 }
 
@@ -87,16 +95,23 @@ void RellenarMapa() {
 de que tambien se imprimirá al personaje en la posición de la array del mapa perteneciente.*/
 void ImprimirPantalla() {
     system("CLS");
+    cout << setw(CONSOLE_WIDHT / 2);
     for (int i = 0; i < CONSOLE_HEIGHT; i++) {
         for (int j = 0; j < CONSOLE_WIDHT; j++) {
             if (personaje_x == j && personaje_y == i) {
                 cout << personaje;
+                
             }
             else {
+                if (ConsoleScreen[i][j] == MAP_TILES::WALL) {
+                    
+                }
+                
                 cout << (char)ConsoleScreen[i][j];
             }
         }
         cout << endl;
+        cout << setw(CONSOLE_WIDHT / 2); //Alinea el mapa
     }
 }
 
@@ -216,6 +231,7 @@ void GenerarPuntos() {
 
 //Función que imprime los puntos
 void ImprimirPuntos() {
+    cout << setw(CONSOLE_WIDHT / 2);
     cout << puntos_personaje << "/" << map_points << "\n";
 }
 //Función que cuando no hay mas puntos disponibles indica que hemos ganado.
